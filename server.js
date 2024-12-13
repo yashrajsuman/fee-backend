@@ -16,6 +16,9 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
+app.get('/', (req, res) => {
+    res.send('Hi'); // Print "Hi" on the screen
+});
 // Routes
 app.use('/api', loginRoutes);
 app.use('/api/performance', performanceRoutes);
@@ -28,8 +31,5 @@ sequelize.sync()
     .then(() => console.log('Database synced...'))
     .catch(err => console.log('Error: ' + err));
 
-// Start server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-});
+// Export the app for Vercel
+module.exports = app;
