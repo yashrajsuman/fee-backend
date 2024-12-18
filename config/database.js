@@ -35,16 +35,6 @@ sequelize.authenticate()
     .catch(err => console.log('Error: ' + err));
 
 // Start an Express server to keep the app alive
-const app = express();
-const port = process.env.PORT || 3000;
 
-app.get('/', (req, res) => {
-    res.send('Hello, the database is connected!');
-});
-
-app.listen(port, () => {
-    console.log(`App running at http://localhost:${port}`);
-});
 
 module.exports = sequelize;
-
