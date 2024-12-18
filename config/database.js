@@ -1,3 +1,4 @@
+const express = require('express');
 const { Sequelize } = require('sequelize');
 const dotenv = require('dotenv');
 
@@ -5,33 +6,45 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const sequelize = new Sequelize(
-    process.env.DB_DATABASE, // Database name
-    process.env.DB_USER,     // Database username
-    process.env.DB_PASSWORD, // Database password
+    process.env.DB_DATABASE,
+    process.env.DB_USER,
+    process.env.DB_PASSWORD,
     {
-        host: process.env.DB_HOST,   // Database host
-        dialect: 'mysql',            // Database dialect
-        port: process.env.DB_PORT || 3306, // Default MySQL port
+        host: process.env.DB_HOST,
+        dialect: 'mysql',
+        port: process.env.DB_PORT || 3306,
         dialectOptions: {
             ssl: {
-                require: true,             // Ensure SSL is required
-                rejectUnauthorized: false // For self-signed certificates (can be true for proper SSL setups)
+                require: true,
+                rejectUnauthorized: false
             }
         },
         pool: {
-            max: 5, // Maximum number of connections
-            min: 0, // Minimum number of connections
-            acquire: 30000, // Maximum time to wait for a connection (ms)
-            idle: 10000     // Maximum time a connection can be idle (ms)
+            max: 5,
+            min: 0,
+            acquire: 30000,
+            idle: 10000
         },
-        logging: false // Disable logging (optional, can help with cleaner output)
+        logging: false
     }
 );
 
-// Test database connection
+// Test the database connection
 sequelize.authenticate()
     .then(() => console.log('Database connected...'))
     .catch(err => console.log('Error: ' + err));
 
-// Export sequelize instance for use in other modules
+// Start an Express server to keep the app alive
+const app = express();
+const port = process.env.PORT || 3000;
+
+app.get('/', (req, res) => {
+    res.send('Hello, the database is connected!');
+});
+
+app.listen(port, () => {
+    console.log(`App running at http://localhost:${port}`);
+});
+
 module.exports = sequelize;
+
